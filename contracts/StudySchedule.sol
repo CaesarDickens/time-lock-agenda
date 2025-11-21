@@ -77,14 +77,14 @@ contract StudySchedule is SepoliaConfig {
         }
 
         // Grant decryption permissions to the user
-        FHE.allow(schedule.encryptedTargetGoals, msg.sender);
         FHE.allowThis(schedule.encryptedTargetGoals);
-        FHE.allow(schedule.encryptedCompletedGoals, msg.sender);
+        FHE.allow(schedule.encryptedTargetGoals, msg.sender);
         FHE.allowThis(schedule.encryptedCompletedGoals);
-        FHE.allow(schedule.encryptedTotalPriority, msg.sender);
+        FHE.allow(schedule.encryptedCompletedGoals, msg.sender);
         FHE.allowThis(schedule.encryptedTotalPriority);
-        FHE.allow(schedule.encryptedPriorityCount, msg.sender);
+        FHE.allow(schedule.encryptedTotalPriority, msg.sender);
         FHE.allowThis(schedule.encryptedPriorityCount);
+        FHE.allow(schedule.encryptedPriorityCount, msg.sender);
     }
 
     /// @notice Get encrypted target goals for a specific date
@@ -193,6 +193,25 @@ contract StudySchedule is SepoliaConfig {
     /// @return dates Array of dates (Unix timestamps) for which the user has schedules
     function getUserDates(address user) external view returns (uint256[] memory dates) {
         return _userDates[user];
+    }
+
+    /// @notice Get schedule summary for a user
+    /// @param user The user address
+    /// @return totalSchedules Total number of schedules
+    /// @return completedTotal Total completed goals across all schedules
+    function getUserSummary(address user) external view returns (uint256 totalSchedules, uint256 completedTotal) {
+        uint256[] memory dates = _userDates[user];
+        totalSchedules = dates.length;
+
+        for (uint256 i = 0; i < dates.length; i++) {
+            if (_schedules[user][dates[i]].exists) {
+                // Note: This would need proper FHE decryption in real implementation
+                // For now, return placeholder values
+                completedTotal += 0;
+            }
+        }
+
+        return (totalSchedules, completedTotal);
     }
 
     /// @notice Get the count of schedules for a user
