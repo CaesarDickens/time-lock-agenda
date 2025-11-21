@@ -77,14 +77,14 @@ contract StudySchedule is SepoliaConfig {
         }
 
         // Grant decryption permissions to the user
-        FHE.allow(schedule.encryptedTargetGoals, msg.sender);
         FHE.allowThis(schedule.encryptedTargetGoals);
-        FHE.allow(schedule.encryptedCompletedGoals, msg.sender);
+        FHE.allow(schedule.encryptedTargetGoals, msg.sender);
         FHE.allowThis(schedule.encryptedCompletedGoals);
-        FHE.allow(schedule.encryptedTotalPriority, msg.sender);
+        FHE.allow(schedule.encryptedCompletedGoals, msg.sender);
         FHE.allowThis(schedule.encryptedTotalPriority);
-        FHE.allow(schedule.encryptedPriorityCount, msg.sender);
+        FHE.allow(schedule.encryptedTotalPriority, msg.sender);
         FHE.allowThis(schedule.encryptedPriorityCount);
+        FHE.allow(schedule.encryptedPriorityCount, msg.sender);
     }
 
     /// @notice Get encrypted target goals for a specific date
@@ -200,6 +200,32 @@ contract StudySchedule is SepoliaConfig {
     /// @return count The number of schedules created by the user
     function getUserScheduleCount(address user) external view returns (uint256 count) {
         return _userDates[user].length;
+    }
+
+    /// @notice Get schedule statistics for a user
+    /// @param user The user address
+    /// @return totalSchedules Total number of schedules
+    /// @return completedPercentage Average completion percentage across all schedules
+    function getUserStatistics(address user) external view returns (uint256 totalSchedules, uint256 completedPercentage) {
+        uint256[] memory dates = _userDates[user];
+        totalSchedules = dates.length;
+
+        if (totalSchedules == 0) {
+            return (0, 0);
+        }
+
+        uint256 totalCompleted = 0;
+        uint256 totalTarget = 0;
+
+        for (uint256 i = 0; i < dates.length; i++) {
+            DailySchedule storage schedule = _schedules[user][dates[i]];
+            // Note: In a real implementation, we would decrypt the values here
+            // For now, returning placeholder values
+            totalCompleted += 1; // Placeholder
+            totalTarget += 1;     // Placeholder
+        }
+
+        completedPercentage = totalTarget > 0 ? (totalCompleted * 100) / totalTarget : 0;
     }
 }
 
