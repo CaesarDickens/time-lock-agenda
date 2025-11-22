@@ -101,6 +101,7 @@ export const useStudySchedule = (parameters: {
   const [message, setMessage] = useState<string>("");
   const [currentDate, setCurrentDate] = useState<number | undefined>(undefined);
   const [ethersProvider, setEthersProvider] = useState<ethers.JsonRpcProvider | undefined>(undefined);
+  const [userSummary, setUserSummary] = useState<{totalSchedules: number, completedTotal: number} | undefined>(undefined);
 
   const studyScheduleRef = useRef<StudyScheduleInfoType | undefined>(undefined);
   const isRefreshingRef = useRef<boolean>(isRefreshing);
@@ -489,7 +490,7 @@ Please try:
         throw error;
       }
 
-      if (targetGoals < 0 || completedGoals < 0 || priority < 1 || priority > 3) {
+      if (targetGoals < 1 || completedGoals < 0 || priority < 1 || priority > 3) {
         const error = new Error("Invalid input values: target goals must be >= 1, completed goals must be >= 0, priority must be 1-3");
         setMessage(error.message);
         throw error;
