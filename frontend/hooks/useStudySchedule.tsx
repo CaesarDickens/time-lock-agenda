@@ -101,6 +101,7 @@ export const useStudySchedule = (parameters: {
   const [message, setMessage] = useState<string>("");
   const [currentDate, setCurrentDate] = useState<number | undefined>(undefined);
   const [ethersProvider, setEthersProvider] = useState<ethers.JsonRpcProvider | undefined>(undefined);
+  const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
 
   const studyScheduleRef = useRef<StudyScheduleInfoType | undefined>(undefined);
   const isRefreshingRef = useRef<boolean>(isRefreshing);
@@ -125,8 +126,27 @@ export const useStudySchedule = (parameters: {
   useEffect(() => {
     if (parameters.ethersReadonlyProvider) {
       setEthersProvider(parameters.ethersReadonlyProvider as ethers.JsonRpcProvider);
+      setConnectionStatus('connected');
+    } else {
+      setConnectionStatus('disconnected');
     }
   }, [parameters.ethersReadonlyProvider]);
+
+  // Monitor connection status
+  useEffect(() => {
+    const checkConnection = async () => {
+      if (ethersProvider && ethersSigner) {
+        try {
+          await ethersProvider.getNetwork();
+          setConnectionStatus('connected');
+        } catch (error) {
+          setConnectionStatus('error');
+        }
+      }
+    };
+
+    checkConnection();
+  }, [ethersProvider, ethersSigner]);
 
   // StudySchedule contract
   const studySchedule = useMemo(() => {
@@ -489,7 +509,7 @@ Please try:
         throw error;
       }
 
-      if (targetGoals <= 0 || completedGoals < 0 || priority < 1 || priority > 3) {
+      if (targetGoals < 1 || completedGoals < 0 || priority < 1 || priority > 3) {
         const error = new Error("Invalid input values: target goals must be >= 1, completed goals must be >= 0, priority must be 1-3");
         setMessage(error.message);
         throw error;
@@ -580,6 +600,7 @@ Please try:
     canRefresh,
     canSubmit,
     canDecrypt,
+    connectionStatus,
     createOrUpdateSchedule,
     decryptSchedule,
     refreshSchedule,
