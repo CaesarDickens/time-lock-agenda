@@ -11,6 +11,7 @@ import {
 } from "react";
 
 import { FhevmInstance } from "@/fhevm/fhevmTypes";
+import { ConnectionStatus, StudyScheduleHookReturn } from "@/lib/types";
 import { FhevmDecryptionSignature } from "@/fhevm/FhevmDecryptionSignature";
 import { GenericStringStorage } from "@/fhevm/GenericStringStorage";
 
@@ -63,6 +64,17 @@ function getStudyScheduleByChainId(
 }
 
 export const useStudySchedule = (parameters: {
+  instance: FhevmInstance | undefined;
+  fhevmDecryptionSignatureStorage: GenericStringStorage;
+  eip1193Provider: ethers.Eip1193Provider | undefined;
+  chainId: number | undefined;
+  ethersSigner: ethers.JsonRpcSigner | undefined;
+  ethersReadonlyProvider: ethers.ContractRunner | undefined;
+  sameChain: RefObject<(chainId: number | undefined) => boolean>;
+  sameSigner: RefObject<
+    (ethersSigner: ethers.JsonRpcSigner | undefined) => boolean
+  >;
+}): StudyScheduleHookReturn => {
   instance: FhevmInstance | undefined;
   fhevmDecryptionSignatureStorage: GenericStringStorage;
   eip1193Provider: ethers.Eip1193Provider | undefined;
