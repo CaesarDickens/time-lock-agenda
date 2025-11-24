@@ -37,6 +37,11 @@ const config: HardhatUserConfig = {
         mnemonic: "test test test test test test test test test test test junk",
       },
       chainId: 31337,
+      allowUnlimitedContractSize: true,
+      mining: {
+        auto: true,
+        interval: 0,
+      },
     },
     anvil: {
       accounts: {
@@ -46,11 +51,21 @@ const config: HardhatUserConfig = {
       },
       chainId: 31337,
       url: "http://localhost:8545",
+      timeout: 60000,
     },
     sepolia: {
       accounts: [`0x${PRIVATE_KEY}`],
       chainId: 11155111,
       url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+      gasPrice: 20000000000, // 20 gwei
+      gas: 6000000,
+    },
+    localhost: {
+      accounts: {
+        mnemonic: "test test test test test test test test test test test junk",
+      },
+      chainId: 31337,
+      url: "http://localhost:8545",
     },
   },
   paths: {
