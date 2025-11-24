@@ -78,7 +78,16 @@
     "typechain": "cross-env TS_NODE_TRANSPILE_ONLY=true hardhat typechain",
     "local-node": "hardhat node",
     "deploy-local": "hardhat deploy --network localhost",
-    "deploy-sepolia": "hardhat deploy --network sepolia"
+    "deploy-sepolia": "hardhat deploy --network sepolia",
+    "frontend:install": "cd frontend && npm install",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build",
+    "frontend:lint": "cd frontend && npm run lint",
+    "genabi": "cd frontend && npm run genabi",
+    "setup": "npm install && npm run frontend:install",
+    "dev": "npm run local-node",
+    "build": "npm run compile && npm run frontend:build",
+    "deploy": "npm run deploy-local && npm run genabi"
   },
   "overrides": {
     "ws@>=7.0.0 <7.5.10": ">=7.5.10",
