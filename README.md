@@ -4,7 +4,7 @@ A fully encrypted study schedule tracking system built with FHEVM (Fully Homomor
 
 ## Links
 
-- **Vercel Deployment**: https://time-lock-liard.vercel.app/
+- **Vercel Deployment**: https://time-lock-agenda-vtxd.vercel.app/
 - **Demo Video**: https://github.com/CaesarDickens/time-lock-agenda/blob/main/time-lock.mp4
 - **GitHub Repository**: https://github.com/CaesarDickens/time-lock-agenda
 
